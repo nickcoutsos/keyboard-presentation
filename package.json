@@ -1,0 +1,13 @@
+{
+  "name": "keyboard-presentation",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "parcel --no-hmr"
+  },
+  "dependencies": {
+    "parcel-bundler": "^1.6.2",
+    "three": "^0.90.0"
+  }
+}
