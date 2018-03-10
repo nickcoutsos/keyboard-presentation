@@ -57,15 +57,28 @@ export const ergodox = [
   [{x:-3},""]
 ]
 
-const makeKey = (w, h, primary) => (
+export const split = [
+  [{r:15, rx:3}, "","1","2","3","4","5","6"],
+  [{w:1.5},"","Q","W","E","R","T"],
+  [{w:1.75},"","A","S","D","F","G"],
+  [{w:2.25},"","Z","X","C","V","B"],
+  [{w:1.25},"",{w:1.25},"",{w:1.25},"",{a:7,w:3.25}, ""],
+  [{r:-15, rx:10, ry:1.8, x:.25}, "7","8","9","0","-","=",{w:2},""],
+  [{x:0},"Y","U","I","O","P","[","]",{w:1.25},""],
+  [{x:0.25},"H","J","K","L",";","'",{w:2},""],
+  [{x:0.5},"N","M",",",".","/",{w:2.75},""],
+  [{w:2},"",{a:4,w:1.25},"",{w:1.25},"",{w:1.25},"",{w:1.25},""]
+]
+
+export const makeKey = (w, h, primary) => (
    new Mesh(
     new BoxGeometry(w - .15, h - .15, .15),
     new MeshStandardMaterial({
       color: primary ? 'whitesmoke' : 'sienna',
-      emissive: 'white',
+      emissive: 'powderblue',
       emissiveIntensity: 0.25,
       roughness: 0.7,
-      metalness: 0.3
+      metalness: 0.5
     })
   )
 )
@@ -128,9 +141,12 @@ export const makeKeyboard = layout => {
     cursor.y -= h
   })
 
+  keyboard.updateMatrixWorld()
   const fKey = searchUserData(keyboard, 'label', 'f')
   const jKey = searchUserData(keyboard, 'label', 'j')
-  const center = new Vector3().lerpVectors(fKey.position, jKey.position, .5)
+  const fPos = fKey.parent.localToWorld(fKey.position.clone())
+  const jPos = jKey.parent.localToWorld(jKey.position.clone())
+  const center = new Vector3().lerpVectors(fPos, jPos, .5)
 
   keyboard.position.sub(center)
 
