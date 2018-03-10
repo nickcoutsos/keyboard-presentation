@@ -1,5 +1,6 @@
 import { DirectionalLight, PerspectiveCamera, Scene, Vector3, WebGLRenderer } from 'three';
 import * as layouts from './layouts'
+import * as dactyl from './dactyl'
 import './style.css'
 
 const renderer = new WebGLRenderer({ antialias: true, alpha: true });
@@ -28,8 +29,11 @@ camera.position.set(-5, -10, 10)
 camera.up.set(0, 0, 1)
 camera.lookAt(new Vector3(0, 0, 0))
 
-scene.add(camera, light, layouts.makeKeyboard(layouts.apple))
+scene.add(camera, light)
+// scene.add(layouts.makeKeyboard(layouts.apple))
+scene.add(dactyl.makeKeyboard())
 
+renderer.setPixelRatio(window.devicePixelRatio ? window.devicePixelRatio : 1)
 document.querySelector('#app').appendChild(renderer.domElement)
 window.addEventListener('resize', resize)
 
