@@ -21,11 +21,14 @@ export default (renderFrame, source, target, duration) => {
 
         const aQuat = a.getWorldQuaternion()
         const bQuat = b.getWorldQuaternion()
+        const aScale = a.scale
+        const bScale = b.scale
         const aPos =  a.getWorldPosition()
         const bPos =  b.getWorldPosition()
 
         Quaternion.slerp(aQuat, bQuat, quaternion, t)
         position.copy(aPos.clone().lerp(bPos, t))
+        node.scale.copy(aScale.clone().lerp(bScale, t))
       }
     })
 
