@@ -16,17 +16,17 @@ const capTopHeight = .25
 const mountWidth = 2 + 3
 const mountHeight = 2 + 3
 const mainRowRadius = (mountHeight + .5) / 2 / Math.sin(alpha/2)/5
-const mainColumnRadius = (mountWidth + .5) / 2 / Math.sin(beta/2)/5
+const mainColumnRadius = (mountWidth + .15) / 2 / Math.sin(beta/2)/5
 const thumbRowRadius = (mountHeight + .25) / 2 / Math.sin(alpha/2)/5
 const thumbColumnRadius = (mountWidth + 1.5) / 2 / Math.sin(beta/2)/5
 
 const columnOffsets = [
-  new Vector3(0, 0, 0).divideScalar(2),
-  new Vector3(0, 0, 0).divideScalar(2),
-  new Vector3(0, .282, -.3).divideScalar(2),
-  new Vector3(0, 0, 0).divideScalar(2),
-  new Vector3(0, -.58, .564).divideScalar(2),
-  new Vector3(0, -.58, .564).divideScalar(2)
+  new Vector3(0, 0, 0).divideScalar(1.5),
+  new Vector3(0, 0, 0).divideScalar(1.5),
+  new Vector3(0, .282, -.3).divideScalar(1.5),
+  new Vector3(0, 0, 0).divideScalar(1.5),
+  new Vector3(0, -.58, .564).divideScalar(1.5),
+  new Vector3(0, -.58, .564).divideScalar(1.5)
 ]
 
 const positionKey = (column, row) => {
@@ -65,37 +65,45 @@ const positionThumbKey = (column, row) => {
     .multiply(translation(new Vector3(0, 0, -thumbRowRadius)))
 }
 
+const fn = (id) => {
+  return {
+    id: `fn-${id}`,
+    isKey: true,
+    label: ''
+  }
+}
+
 const makeKeyboard = () => {
   const keyboard = new Object3D()
-  const makeColumn = col => (label, row) => ({ col, row, label })
+  const makeColumn = col => (element, row) => ({ col, row, element })
 
   const leftKeys = flatten([
     ['5', 't', 'g', 'b'].map(makeColumn(0)),
-    ['4', 'r', 'f', 'v', ''].map(makeColumn(1)),
-    ['3', 'e', 'd', 'c', ''].map(makeColumn(2)),
-    ['2', 'w', 's', 'x', ''].map(makeColumn(3)),
-    ['1', 'q', 'a', 'z', ''].map(makeColumn(4)),
-    times(4).map(n => ({ col: 5, row: n, w: 1.5})),
-    { col: 5, row: 4 }
+    ['4', 'r', 'f', 'v', fn('l-8')].map(makeColumn(1)),
+    ['3', 'e', 'd', 'c', fn('l-7')].map(makeColumn(2)),
+    ['2', 'w', 's', 'x', fn('l-6')].map(makeColumn(3)),
+    ['1', 'q', 'a', 'z', fn('l-5')].map(makeColumn(4)),
+    times(4).map(n => ({ col: 5, row: n, w: 1.5, element: fn(`l-${n}`)})),
+    { col: 5, row: 4, element: fn('l-4') }
   ])
 
   const rightKeys = flatten([
     ['6', 'y', 'h', 'n'].map(makeColumn(0)),
-    ['7', 'u', 'j', 'm', ''].map(makeColumn(1)),
-    ['8', 'i', 'k', ',', ''].map(makeColumn(2)),
-    ['9', 'o', 'l', '.', ''].map(makeColumn(3)),
-    ['0', 'p', ';', '/', ''].map(makeColumn(4)),
-    times(4).map(n => ({ col: 5, row: n, w: 1.5})),
-    { col: 5, row: 4 }
+    ['7', 'u', 'j', 'm', fn('r-8')].map(makeColumn(1)),
+    ['8', 'i', 'k', ',', fn('r-7')].map(makeColumn(2)),
+    ['9', 'o', 'l', '.', fn('r-6')].map(makeColumn(3)),
+    ['0', 'p', ';', '/', fn('r-5')].map(makeColumn(4)),
+    times(4).map(n => ({ col: 5, row: n, w: 1.5, element: fn(`r-${n}`)})),
+    { col: 5, row: 4, element: fn('r-4') }
   ])
 
   const thumbKeys = [
-    { col: 2, row: -1 },
-    { col: 2, row: 0 },
-    { col: 2, row: 1 },
     { col: 1, row: 1 },
-    { col: 0, row: -0.5, h: 2 },
-    { col: 1, row: -0.5, h: 2 }
+    { col: 2, row: 1 },
+    { col: 2, row: 0 },
+    { col: 2, row: -1 },
+    { col: 1, row: -0.5, h: 2 },
+    { col: 0, row: -0.5, h: 2 }
   ]
 
   const rightHand = new Object3D()
@@ -103,10 +111,12 @@ const makeKeyboard = () => {
 
   keyboard.add(leftHand, rightHand)
 
-  for (let {col, row, label, w} of rightKeys) {
-    const key = makeKey(w || 1, 1, !!label)
+  for (let {col, row, element, w} of rightKeys) {
+    const { label, id } = element
+    const key = makeKey(w || 1, 1, typeof element === 'string')
     key.applyMatrix(positionKey(col, row))
-    key.userData.label = label
+    key.userData.label = label || element
+    key.userData.id = id || element
 
     if (w) {
       key.applyMatrix(translation(new Vector3(w/6, 0, 0)))
@@ -115,10 +125,12 @@ const makeKeyboard = () => {
     rightHand.add(key)
   }
 
-  for (let {col, row, label, w} of leftKeys) {
-    const key = makeKey(w || 1, 1, !!label)
+  for (let {col, row, element, w} of leftKeys) {
+    const { label, id } = element
+    const key = makeKey(w || 1, 1, typeof element === 'string')
     key.applyMatrix(positionKey(col, row))
-    key.userData.label = label
+    key.userData.label = label || element
+    key.userData.id = id || element
 
     if (w) {
       key.applyMatrix(translation(new Vector3(w/6, 0, 0)))
@@ -131,14 +143,18 @@ const makeKeyboard = () => {
   leftHand.scale.x = -1
   leftHand.position.x = -5
 
-  for (let {col, row, h} of thumbKeys) {
+  for (let i in thumbKeys) {
+    const {col, row, h} = thumbKeys[i]
     const key = makeKey(1, h || 1)
+    key.userData.id = `fn-r-${Number(i) + 9}`
     key.applyMatrix(positionThumbKey(col, row))
     rightHand.add(key)
   }
 
-  for (let {col, row, h} of thumbKeys) {
+  for (let i in thumbKeys) {
+    const {col, row, h} = thumbKeys[i]
     const key = makeKey(1, h || 1)
+    key.userData.id = `fn-l-${Number(i) + 9}`
     key.applyMatrix(positionThumbKey(col, row))
     leftHand.add(key)
   }
