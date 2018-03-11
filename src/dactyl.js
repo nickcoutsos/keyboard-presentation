@@ -69,14 +69,6 @@ const makeKeyboard = () => {
   const keyboard = new Object3D()
   const makeColumn = col => (label, row) => ({ col, row, label })
 
-  // for (let col = 0; col < 6; col++) {
-  //   for (let row = 0; row < 5; row++) {
-  //     const key = makeKey(1, 1, true)
-  //     key.applyMatrix(positionKey(col, row))
-  //     keyboard.add(key)
-  //   }
-  // }
-
   const leftKeys = flatten([
     ['5', 't', 'g', 'b'].map(makeColumn(0)),
     ['4', 'r', 'f', 'v', ''].map(makeColumn(1)),
@@ -114,6 +106,7 @@ const makeKeyboard = () => {
   for (let {col, row, label, w} of rightKeys) {
     const key = makeKey(w || 1, 1, !!label)
     key.applyMatrix(positionKey(col, row))
+    key.userData.label = label
 
     if (w) {
       key.applyMatrix(translation(new Vector3(w/6, 0, 0)))
@@ -125,6 +118,7 @@ const makeKeyboard = () => {
   for (let {col, row, label, w} of leftKeys) {
     const key = makeKey(w || 1, 1, !!label)
     key.applyMatrix(positionKey(col, row))
+    key.userData.label = label
 
     if (w) {
       key.applyMatrix(translation(new Vector3(w/6, 0, 0)))
@@ -148,6 +142,8 @@ const makeKeyboard = () => {
     key.applyMatrix(positionThumbKey(col, row))
     leftHand.add(key)
   }
+
+  keyboard.updateMatrixWorld()
 
   return keyboard
 }

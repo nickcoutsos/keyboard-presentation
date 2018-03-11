@@ -1,4 +1,4 @@
-import { Object3D, Vector3 } from 'three'
+import { Matrix4, Object3D, Vector3 } from 'three'
 import { BoxGeometry, Mesh, MeshStandardMaterial } from 'three'
 import { searchUserData } from './util'
 
@@ -75,8 +75,8 @@ export const makeKey = (w, h, primary) => (
     new BoxGeometry(w - .15, h - .15, .15),
     new MeshStandardMaterial({
       color: primary ? 'whitesmoke' : 'sienna',
-      emissive: 'powderblue',
-      emissiveIntensity: 0.25,
+      emissive: 'white',
+      emissiveIntensity: 0.1,
       roughness: 0.7,
       metalness: 0.5
     })
@@ -88,23 +88,23 @@ export const makeKeyboard = layout => {
   let w = 1, h = 1
 
   const keyboard = new Object3D()
-  let cluster = new Object3D()
-  cluster.userData.r = 0
-  cluster.userData.rx = 0
-  cluster.userData.ry = 0
-
-  keyboard.add(cluster)
+  let rotation = { a: 0, x: 0, y: 0 }
+  let matrix = new Matrix4()
 
   layout.forEach(row => {
     row.forEach(element =>  {
       if (typeof element === 'string') {
         const key = makeKey(w, h, element.length > 0)
 
+        key.userData.label = element ? element.toLowerCase() : null
         key.position.copy(cursor)
         key.position.x += w / 2
         key.position.y -= h / 2
-        key.userData.label = element ? element.toLowerCase() : null
-        cluster.add(key)
+
+        key.updateMatrix()
+        key.applyMatrix(matrix)
+
+        keyboard.add(key)
 
         cursor.x += w
 
@@ -122,17 +122,16 @@ export const makeKeyboard = layout => {
       h = h_ || h
 
       if (r || rx || ry) {
-        const ry_ = ry || cluster.userData.ry
+        const yOffset = ry || rotation.yOffset
 
-        cluster = new Object3D()
-        cluster.userData.r = r
-        cluster.userData.rx = rx
-        cluster.userData.ry = ry_
+        rotation.a = r
+        rotation.xOffset = rx
+        rotation.yOffset = yOffset
 
-        cluster.rotateZ(Math.PI * -r/180)
-        cluster.position.set(rx || 0, -(ry_ || 0), 0)
+        matrix = new Matrix4()
+          .multiply(new Matrix4().makeTranslation(rx || 0, -(yOffset || 0), 0))
+          .multiply(new Matrix4().makeRotationZ(Math.PI * -r/180))
 
-        keyboard.add(cluster)
         cursor.set(x || 0, -(y || 0), 0)
       }
     })
@@ -141,14 +140,28 @@ export const makeKeyboard = layout => {
     cursor.y -= h
   })
 
+
   keyboard.updateMatrixWorld()
+  keyboard.updateMatrix()
   const fKey = searchUserData(keyboard, 'label', 'f')
   const jKey = searchUserData(keyboard, 'label', 'j')
   const fPos = fKey.parent.localToWorld(fKey.position.clone())
   const jPos = jKey.parent.localToWorld(jKey.position.clone())
   const center = new Vector3().lerpVectors(fPos, jPos, .5)
 
-  keyboard.position.sub(center)
+  keyboard.children.forEach(node => node.position.sub(center))
 
   return keyboard
+}
+
+export const makeKeymap = keyboard => {
+  let map = {}
+  keyboard.traverse(node => {
+    const { label } = node.userData
+    if (label) {
+      map[label] = node
+    }
+  })
+
+  return map
 }
