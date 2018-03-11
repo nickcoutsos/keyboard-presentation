@@ -140,9 +140,6 @@ export const makeKeyboard = layout => {
     cursor.y -= h
   })
 
-
-  keyboard.updateMatrixWorld()
-  keyboard.updateMatrix()
   const fKey = searchUserData(keyboard, 'label', 'f')
   const jKey = searchUserData(keyboard, 'label', 'j')
   const fPos = fKey.parent.localToWorld(fKey.position.clone())
