@@ -1,6 +1,6 @@
 import { Matrix4, Object3D, Vector3 } from 'three'
 import { flatten, times } from 'lodash'
-import { makeKey } from './layouts'
+import makeKey from './key'
 
 const translation = v => new Matrix4().makeTranslation(v.x, v.y, v.z)
 const rotationX = a => new Matrix4().makeRotationX(a)
@@ -12,7 +12,7 @@ const rotationXY = a => new Matrix4().makeRotationAxis(
 
 const alpha = (180 / 12) *(Math.PI / 180)
 const beta = (180 / 36) *(Math.PI / 180)
-const capTopHeight = .25
+
 const mountWidth = 2 + 3
 const mountHeight = 2 + 3
 const mainRowRadius = (mountHeight + .5) / 2 / Math.sin(alpha/2)/5

@@ -1,5 +1,5 @@
 import { Matrix4, Object3D, Vector3 } from 'three'
-import { BoxGeometry, Mesh, MeshStandardMaterial } from 'three'
+import makeKey from './key'
 import { searchUserData } from './util'
 
 export const classic = [
@@ -77,19 +77,6 @@ export const split = [
   [{x:0.5},"N","M",",",".","/",{w:2.75},""],
   [{w:2},"",{a:4,w:1.25},"",{w:1.25},"",{w:1.25},"",{w:1.25},""]
 ]
-
-export const makeKey = (w, h, primary) => (
-   new Mesh(
-    new BoxGeometry(w - .15, h - .15, .15),
-    new MeshStandardMaterial({
-      color: primary ? 'whitesmoke' : 'sienna',
-      emissive: 'white',
-      emissiveIntensity: 0.1,
-      roughness: 0.7,
-      metalness: 0.5
-    })
-  )
-)
 
 export const makeKeyboard = layout => {
   const cursor = new Vector3(0, 0, 0)
