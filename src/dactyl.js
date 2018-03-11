@@ -17,7 +17,7 @@ const mountWidth = 2 + 3
 const mountHeight = 2 + 3
 const mainRowRadius = (mountHeight + .5) / 2 / Math.sin(alpha/2)/5
 const mainColumnRadius = (mountWidth + .5) / 2 / Math.sin(beta/2)/5
-const thumbRowRadius = (mountHeight + 1) / 2 / Math.sin(alpha/2)/5
+const thumbRowRadius = (mountHeight + .25) / 2 / Math.sin(alpha/2)/5
 const thumbColumnRadius = (mountWidth + 1.5) / 2 / Math.sin(beta/2)/5
 
 const columnOffsets = [
