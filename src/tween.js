@@ -20,23 +20,35 @@ export default (renderFrame, source, target, duration) => {
   Object.keys(begin).forEach(key => {
     if (end[key]) return
 
-    target.add(sourceKeys[key].clone())
-    end[key] = {
+    const newKey = sourceKeys[key].clone()
+    const newState = end[key] = {
       scale: new Vector3(0, 0, 0),
       position: begin[key].position.clone().sub(new Vector3(0, 0, 5)),
       quaternion: begin[key].quaternion.clone()
     }
+
+    newKey.scale.copy(newState.scale)
+    newKey.position.copy(newState.position)
+    newKey.quaternion.copy(newState.quaternion)
+    newKey.updateMatrix()
+    source.add(newKey)
   })
 
   Object.keys(end).forEach(key => {
     if (begin[key]) return
 
-    source.add(targetKeys[key].clone())
-    begin[key] = {
+    const newKey = targetKeys[key].clone()
+    const newState = begin[key] = {
       scale: new Vector3(0, 0, 0),
       position: end[key].position.clone().sub(new Vector3(0, 0, 5)),
       quaternion: end[key].quaternion.clone()
     }
+
+    newKey.scale.copy(newState.scale)
+    newKey.position.copy(newState.position)
+    newKey.quaternion.copy(newState.quaternion)
+    newKey.updateMatrix()
+    source.add(newKey)
   })
 
   return animation.animate(t => {
@@ -55,5 +67,5 @@ export default (renderFrame, source, target, duration) => {
     })
 
     renderFrame()
-  }, duration)
+  }, duration, animation.easeOutQuad)
 }
