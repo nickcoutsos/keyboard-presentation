@@ -5,7 +5,7 @@ export default (w, h, primary) => {
   const y = h - .15
 
   const key = new Mesh(
-    new BoxGeometry(1, 1, .15),
+    new BoxGeometry(1, 1, .35),
     new MeshStandardMaterial({
       color: primary ? 'whitesmoke' : 'sienna',
       emissive: 'white',
