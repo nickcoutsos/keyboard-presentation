@@ -1,7 +1,16 @@
-import { AmbientLight, DirectionalLight, Object3D, PerspectiveCamera, Scene, Vector3, WebGLRenderer } from 'three';
+import { zip } from 'lodash'
+import {
+  AmbientLight,
+  DirectionalLight,
+  PerspectiveCamera,
+  Scene,
+  Vector3,
+  WebGLRenderer
+} from 'three';
+
 import * as layouts from './layouts'
 import * as dactyl from './dactyl'
-import tween from './tween'
+import { Tweener } from './tween'
 import './style.css'
 
 const container = document.querySelector('#app')
@@ -34,9 +43,7 @@ camera.position.set(-5, -10, 10)
 camera.up.set(0, 0, 1)
 camera.lookAt(new Vector3(0, 0, 0))
 
-const wrapper = new Object3D()
-
-const phases = [
+const keyboards = [
   layouts.makeKeyboard(layouts.classic),
   layouts.makeKeyboard(layouts.apple),
   layouts.makeKeyboard(layouts.preonic),
@@ -45,31 +52,15 @@ const phases = [
   dactyl.makeKeyboard()
 ]
 
-const tweens = phases.reduce((acc, phase, i, phases) => {
-  if (i === phases.length - 1) {
-    return acc
-  }
-
-  const start = phase.clone()
-  const end = phases[i + 1].clone()
-  const animation = tween(renderFrame, start, end, 2000)
-  return acc.concat(callback => {
-    wrapper.remove(...wrapper.children)
-    wrapper.add(start)
-    wrapper.updateMatrix()
-    renderFrame()
-    setTimeout(() => animation(callback), 1000)
-  })
-}, [])
-
-const tweenAll = tweens.reduce((a, b) => c => a(() => b(c)))
+const phases = zip(keyboards.slice(0, -1), keyboards.slice(1))
+const tweens = phases.map(phase => new Tweener(renderFrame, ...phase))
 
 scene.add(
   camera,
   directionalLight,
   ambientLight,
-  wrapper
+  tweens[0].wrapper
 )
 
 resize()
-tweenAll()
+tweens[0].play(1500)
