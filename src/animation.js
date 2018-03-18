@@ -48,5 +48,8 @@ export const animate = (frame, duration = 100, timingFunction = linear) => {
 
   }
 
-  return start
+  return {
+    start,
+    stop
+  }
 }
