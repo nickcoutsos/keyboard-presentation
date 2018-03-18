@@ -1,4 +1,5 @@
-import { BoxGeometry, Mesh, MeshStandardMaterial } from 'three'
+import { BoxGeometry, Mesh } from 'three'
+import * as materials from './materials'
 
 export default (w, h, primary) => {
   const x = w - .15
@@ -6,13 +7,7 @@ export default (w, h, primary) => {
 
   const key = new Mesh(
     new BoxGeometry(1, 1, .35),
-    new MeshStandardMaterial({
-      color: primary ? 'whitesmoke' : 'sienna',
-      emissive: 'white',
-      emissiveIntensity: 0.1,
-      roughness: 0.7,
-      metalness: 0.5
-    })
+    materials[ primary ? 'primary' : 'secondary' ]
   )
 
   key.scale.x = x
