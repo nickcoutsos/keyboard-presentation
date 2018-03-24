@@ -90,3 +90,10 @@ viewer.scene.add(wrapper)
 viewer.renderFrame()
 const ruler = new Ruler(viewer)
 viewer.resize()
+
+function animate () {
+  viewer.renderFrame()
+  requestAnimationFrame(animate)
+}
+
+animate()

@@ -5,20 +5,37 @@ import {
   PerspectiveCamera,
   Scene,
   Vector3,
-  WebGLRenderer
+  WebGLRenderer,
+  WebGLRenderTarget
 } from 'three'
+import EffectComposer, { RenderPass, ShaderPass, CopyShader } from 'three-effectcomposer-es6'
+import pauseEffect from './pause-effect'
 
 const container = document.querySelector('#app')
 
 export const renderer = new WebGLRenderer({ antialias: true, alpha: true });
+export const renderTarget = new WebGLRenderTarget(2000, 2000)
 export const camera = new PerspectiveCamera(75, 1, 0.1, 1000)
 export const scene = new Scene()
-export const renderFrame = throttle(() => renderer.render(scene, camera), 16)
+export const composer = new EffectComposer(renderer, renderTarget)
+
+const pausePass = new ShaderPass(pauseEffect)
+const copyPass = Object.assign(new ShaderPass(CopyShader), { renderToScreen: true })
+const start = Date.now()
+
+export const renderFrame = throttle(() => {
+  pausePass.uniforms.time.value = (Date.now() - start) / 1000
+  composer.render()
+}, 16)
 
 export const init = () => {
   renderer.setPixelRatio(window.devicePixelRatio ? window.devicePixelRatio : 1)
   container.appendChild(renderer.domElement)
   window.addEventListener('resize', resize)
+
+  composer.addPass(new RenderPass(scene, camera))
+  composer.addPass(pausePass)
+  composer.addPass(copyPass)
 
   const ambientLight = new AmbientLight('powderblue', .8)
   const directionalLight = new DirectionalLight('white', 1)
@@ -44,6 +61,8 @@ export function resize () {
   const { width, height } = container.getBoundingClientRect()
 
   renderer.setSize(width, height)
+  renderTarget.setSize(width, height)
+  pausePass.uniforms.resolution.value.set(width, height)
   camera.aspect = width / height
   camera.updateProjectionMatrix()
   resizeHandler(width, height)
