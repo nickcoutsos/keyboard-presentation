@@ -37,11 +37,15 @@ export const init = () => {
   resize()
 }
 
-function resize () {
+let resizeHandler = () => {}
+export const onResize = (handler) => { resizeHandler = handler }
+
+export function resize () {
   const { width, height } = container.getBoundingClientRect()
 
   renderer.setSize(width, height)
   camera.aspect = width / height
   camera.updateProjectionMatrix()
+  resizeHandler(width, height)
   renderFrame()
 }

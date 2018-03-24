@@ -1,9 +1,10 @@
+import { values } from 'lodash'
 import * as layouts from './layouts'
 import * as dactyl from './dactyl'
 import * as materials from './materials'
+import Ruler from './ruler'
 import tween from './tween'
-import { renderFrame, init, scene } from './viewer'
-
+import * as viewer from './viewer'
 import './style.css'
 
 const keyboards = [
@@ -25,7 +26,7 @@ window.addEventListener('keyup', ({ key }) => {
 
   if (key === 'ArrowRight' && i < keyboards.length - 1) {
     const next = keyboards[i + 1]
-    const { start, stop } = tween(renderFrame, wrapper, current, next, 150)
+    const { start, stop } = tween(viewer.renderFrame, wrapper, current, next, 500)
 
     cancel && cancel()
     cancel = stop
@@ -34,7 +35,7 @@ window.addEventListener('keyup', ({ key }) => {
     start(() => { cancel = null })
   } else if (key === 'ArrowLeft' && i > 0) {
     const next = keyboards[i - 1]
-    const { start, stop } = tween(renderFrame, wrapper, current, next, 150)
+    const { start, stop } = tween(viewer.renderFrame, wrapper, current, next, 500)
 
     cancel && cancel()
     cancel = stop
@@ -46,7 +47,12 @@ window.addEventListener('keyup', ({ key }) => {
 })
 
 const keyHighlight = (event) => {
-  const { type, key } = event
+  const { type, key, repeat, altKey, ctrlKey, metaKey, shiftKey } = event
+
+  if (repeat || altKey || ctrlKey || metaKey || shiftKey) {
+    return
+  }
+
   if (!/[a-zA-Z0-9;'\-=,./[\]]/.test(key)) {
     return
   }
@@ -63,12 +69,24 @@ const keyHighlight = (event) => {
     ? materials.highlight
     : materials.primary
 
-  renderFrame()
+  measureDistance()
+  viewer.renderFrame()
+}
+
+const measureDistance = () => {
+  const heldKeys = values(activeKeymap)
+    .filter(node => node.material === materials.highlight)
+
+  heldKeys.length === 2
+    ? ruler.measure(...heldKeys)
+    : ruler.hide()
 }
 
 window.addEventListener('keydown', keyHighlight)
 window.addEventListener('keyup', keyHighlight)
 
-init()
-scene.add(wrapper)
-renderFrame()
+viewer.init()
+viewer.scene.add(wrapper)
+viewer.renderFrame()
+const ruler = new Ruler(viewer)
+viewer.resize()
