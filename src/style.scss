@@ -10,7 +10,7 @@ html, body {
 }
 
 h2 {
-	font-size: 48px;
+	font-size: 72px;
 	margin: 10px 0 25px;
 }
 
@@ -40,13 +40,13 @@ h2 {
 	top: 0;
 	left: 0;
 
-	padding: 30px;
+	padding: 10vh 15vw;
 	box-sizing: border-box;
 
 	width: 100vw;
 	height: 100vh;
 
-	transition: opacity 1.5s ease;
+	transition: opacity 1s ease;
 	&:not(.active) {
 		opacity: 0;
 	}

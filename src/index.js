@@ -1,5 +1,5 @@
 import { values } from 'lodash'
-import { Color } from 'three'
+import { Color, Mesh } from 'three'
 import * as animation from './animation'
 import * as layouts from './layouts'
 import * as dactyl from './dactyl'
@@ -8,6 +8,7 @@ import Ruler from './ruler'
 import tween from './tween'
 import * as viewer from './viewer'
 import * as slideshow from './slideshow'
+import STLLoader from './stl-loader'
 import './style.scss'
 
 const keyboards = [
@@ -89,4 +90,11 @@ slideshow.events.on('slidechanged', ({ previousSlideIndex, previousSlide, slide,
   }, 500)
 
   colorTween.start()
+})
+
+const loader = new STLLoader()
+loader.load('dist/assets/plates.stl', geometry => {
+  const mesh = new Mesh(geometry, materials.primary)
+  viewer.scene.add(mesh)
+  viewer.renderFrame()
 })
