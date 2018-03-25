@@ -52,7 +52,7 @@ const positionThumbKey = (column, row) => {
   const columnAngle = beta * column
 
   return new Matrix4()
-    .multiply(translation(new Vector3(-7.5, -2.2, -2)))
+    .multiply(translation(new Vector3(-7.2, -2.2, -1.3)))
     .multiply(rotationXY(alpha))
     .multiply(rotationZ((Math.PI / 180) * 180 * (.25 - .1875)))
     .multiply(translation(new Vector3(mountWidth, 0, 0)))
