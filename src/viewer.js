@@ -19,7 +19,7 @@ export const camera = new PerspectiveCamera(75, 1, 0.1, 1000)
 export const scene = new Scene()
 export const composer = new EffectComposer(renderer, renderTarget)
 
-const pausePass = new ShaderPass(pauseEffect)
+const pausePass = Object.assign(new ShaderPass(pauseEffect), { enabled: false })
 const copyPass = Object.assign(new ShaderPass(CopyShader), { renderToScreen: true })
 const start = Date.now()
 
@@ -39,6 +39,7 @@ export const init = () => {
 
   const ambientLight = new AmbientLight('powderblue', .8)
   const directionalLight = new DirectionalLight('white', 1)
+  ambientLight.name = 'ambient'
   directionalLight.position.set(0, 5, 5)
 
   camera.position.set(-5, -10, 10)
@@ -52,6 +53,10 @@ export const init = () => {
   )
 
   resize()
+}
+
+export const togglePauseEffect = () => {
+  pausePass.enabled = !pausePass.enabled
 }
 
 let resizeHandler = () => {}

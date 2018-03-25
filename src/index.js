@@ -1,16 +1,18 @@
 import { values } from 'lodash'
+import { Color } from 'three'
+import * as animation from './animation'
 import * as layouts from './layouts'
 import * as dactyl from './dactyl'
 import * as materials from './materials'
 import Ruler from './ruler'
 import tween from './tween'
 import * as viewer from './viewer'
-import './style.css'
+import * as slideshow from './slideshow'
+import './style.scss'
 
 const keyboards = [
   layouts.makeKeyboard(layouts.classic),
   layouts.makeKeyboard(layouts.apple),
-  layouts.makeKeyboard(layouts.preonic),
   layouts.makeKeyboard(layouts.split),
   layouts.makeKeyboard(layouts.ergodox),
   dactyl.makeKeyboard()
@@ -18,33 +20,8 @@ const keyboards = [
 
 const wrapper = keyboards[0].clone()
 
-let i = 0, cancel
+let cancel
 let activeKeymap = layouts.makeKeymap(wrapper)
-
-window.addEventListener('keyup', ({ key }) => {
-  const current = keyboards[i]
-
-  if (key === 'ArrowRight' && i < keyboards.length - 1) {
-    const next = keyboards[i + 1]
-    const { start, stop } = tween(viewer.renderFrame, wrapper, current, next, 500)
-
-    cancel && cancel()
-    cancel = stop
-    i += 1
-    activeKeymap = layouts.makeKeymap(wrapper)
-    start(() => { cancel = null })
-  } else if (key === 'ArrowLeft' && i > 0) {
-    const next = keyboards[i - 1]
-    const { start, stop } = tween(viewer.renderFrame, wrapper, current, next, 500)
-
-    cancel && cancel()
-    cancel = stop
-
-    i -= 1
-    activeKeymap = layouts.makeKeymap(wrapper)
-    start(() => { cancel = null })
-  }
-})
 
 const keyHighlight = (event) => {
   const { type, key, repeat, altKey, ctrlKey, metaKey, shiftKey } = event
@@ -91,9 +68,25 @@ viewer.renderFrame()
 const ruler = new Ruler(viewer)
 viewer.resize()
 
-function animate () {
-  viewer.renderFrame()
-  requestAnimationFrame(animate)
-}
+slideshow.initialize()
+slideshow.events.on('slidechanged', ({ previousSlideIndex, previousSlide, slide, state }) => {
+  const prev = keyboards[previousSlideIndex]
+  const next = keyboards[state.slide]
+  const { start, stop } = tween(viewer.renderFrame, wrapper, prev, next, 500)
 
-animate()
+  cancel && cancel()
+  cancel = stop
+
+  activeKeymap = layouts.makeKeymap(wrapper)
+  start(() => { cancel = null })
+
+  const prevColor = new Color(window.getComputedStyle(previousSlide).backgroundColor)
+  const nextColor = new Color(window.getComputedStyle(slide).backgroundColor)
+  const colorTween = animation.animate(t => {
+    const color = prevColor.clone().lerp(nextColor, t)
+    const ambientLight = viewer.scene.getObjectByName('ambient')
+    ambientLight.color = color
+  }, 500)
+
+  colorTween.start()
+})

@@ -3,17 +3,58 @@ html, body {
 	height: 100%;
 	padding: 0;
 	margin: 0;
+
+	font-family: Avenir;
+	font-size: 120%;
+	color: white;
+}
+
+h2 {
+	font-size: 48px;
+	margin: 10px 0 25px;
 }
 
 #app {
-	background-color: powderblue;
+	position: relative;
 	padding: 0;
 	height: 100%;
 	width: 100%;
+
+	transition: background-color 1.5s ease;
 }
+
+#classic { background-color: powderblue; }
+#apple { background-color: darksalmon; }
+#split { background-color: mediumaquamarine; }
+#ergodox { background-color: thistle; }
+#dactyl { background-color: tan; }
 
 #app canvas {
 	display: block;
 	padding: 0;
 	margin: 0;
+}
+
+.slide {
+	position: absolute;
+	top: 0;
+	left: 0;
+
+	padding: 30px;
+	box-sizing: border-box;
+
+	width: 100vw;
+	height: 100vh;
+
+	transition: opacity 1.5s ease;
+	&:not(.active) {
+		opacity: 0;
+	}
+}
+
+.fragment {
+	transition: opacity .5s ease;
+	&:not(.active) {
+		opacity: 0;
+	}
 }
