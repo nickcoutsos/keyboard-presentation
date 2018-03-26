@@ -5,7 +5,7 @@ html, body {
 	margin: 0;
 
 	font-family: Avenir;
-	font-size: 120%;
+	font-size: 160%;
 	color: white;
 }
 
@@ -23,7 +23,7 @@ h2 {
 	transition: background-color 1.5s ease;
 }
 
-#classic { background-color: powderblue; }
+#classic { background-color: lightblue; }
 #apple { background-color: darksalmon; }
 #split { background-color: mediumaquamarine; }
 #ergodox { background-color: thistle; }
@@ -40,7 +40,7 @@ h2 {
 	top: 0;
 	left: 0;
 
-	padding: 10vh 15vw;
+	padding: 10vh 10vw;
 	box-sizing: border-box;
 
 	width: 100vw;
