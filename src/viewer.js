@@ -19,6 +19,8 @@ export const camera = new PerspectiveCamera(75, 1, 0.1, 1000)
 export const scene = new Scene()
 export const composer = new EffectComposer(renderer, renderTarget)
 
+renderer.localClippingEnabled = true
+
 const pausePass = Object.assign(new ShaderPass(pauseEffect), { enabled: false })
 const copyPass = Object.assign(new ShaderPass(CopyShader), { renderToScreen: true })
 const start = Date.now()
@@ -44,7 +46,7 @@ export const init = () => {
 
   camera.position.set(-5, -10, 10)
   camera.up.set(0, 0, 1)
-  camera.lookAt(new Vector3(0, 0, 0))
+  camera.lookAt(new Vector3(0, 3, 0))
 
   scene.add(
     camera,
