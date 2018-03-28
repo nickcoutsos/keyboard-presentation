@@ -9,9 +9,14 @@ html, body {
 	color: white;
 }
 
-h2 {
+.slide h2 {
 	font-size: 72px;
 	margin: 10px 0 25px;
+	text-shadow: 5px 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.slide em {
+	font-family: serif;
 }
 
 #app {
@@ -23,6 +28,8 @@ h2 {
 	transition: background-color 1.5s ease;
 }
 
+#ready { background-color: turquoise; }
+#intro { background-color: beige; }
 #classic { background-color: lightblue; }
 #apple { background-color: darksalmon; }
 #split { background-color: mediumaquamarine; }
