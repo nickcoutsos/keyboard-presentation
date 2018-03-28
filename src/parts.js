@@ -8,6 +8,7 @@ const scene = new Object3D()
 const loader = new STLLoader()
 const addMesh = geometry => scene.add(new Mesh(geometry, materials.primary))
 
+loader.load('dist/assets/caps.stl', addMesh)
 loader.load('dist/assets/plates.stl', addMesh)
 loader.load('dist/assets/main-supports.stl', geometry => {
   const material = materials.primary.clone()
