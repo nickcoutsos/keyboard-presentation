@@ -77,7 +77,7 @@ export class Ruler {
   }
 
   measure (a, b) {
-    const dist = a.position.distanceTo(b.position).toPrecision(2)
+    const dist = a.position.distanceTo(b.position).toPrecision(3)
     const aProj = a.position.clone().add(new Vector3(0, 0, .1525)).project(this.viewer.camera)
     const bProj = b.position.clone().add(new Vector3(0, 0, .1525)).project(this.viewer.camera)
     const screenA = this.toScreen(aProj)
