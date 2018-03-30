@@ -22,11 +22,11 @@ export default {
       vec2 samplePosition = gl_FragCoord.xy / resolution.xy;
       float t = time / 10000.0;
 
-      samplePosition.x = samplePosition.x+(rand(vec2(t,gl_FragCoord.y))-0.5)/128.0;
+      samplePosition.x = samplePosition.x+(rand(vec2(t,gl_FragCoord.y))-0.5)/256.0;
       samplePosition.y = samplePosition.y+(rand(vec2(t))-0.5)/128.0;
 
       // Slightly add color noise to each line
-      vec4 colourNoise = .1 * (
+      vec4 colourNoise = .05 * (
         vec4(-0.5) +
         vec4(
           rand(vec2(gl_FragCoord.y,t)),
@@ -40,13 +40,13 @@ export default {
       float whiteNoise = rand(
         vec2(t,0) + 
         vec2(
-          floor(samplePosition.y * 30.0),
+          floor(samplePosition.y * 500.0),
           floor(samplePosition.x * 30.0)
         )
       );
 
       bool useNoise = (
-        whiteNoise > 11.5 - 30.0 * samplePosition.y ||
+        whiteNoise > 11.5 - 50.0 * samplePosition.y ||
         whiteNoise < 1.5 - 5.0 * samplePosition.y
       );
 
