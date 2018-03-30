@@ -11,12 +11,16 @@ html, body {
 
 .slide h2 {
 	font-size: 72px;
-	margin: 10px 0 25px;
-	text-shadow: 5px 5px 15px rgba(0, 0, 0, 0.15);
+	margin: 10px 0;
+	text-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .slide em {
 	font-family: serif;
+}
+
+.slide h2 + ul {
+	margin: 0;
 }
 
 #app {
