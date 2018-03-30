@@ -29,7 +29,8 @@ export const next = (slides, state) => {
     events.emit('fragmentchanged', {
       slide: slides[state.slide],
       slideIndex: state.slide,
-      fragment
+      fragment,
+      state
     })
   } else if (state.slide < slides.length - 1) {
     const previousSlide = slides[state.slide]

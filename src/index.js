@@ -7,6 +7,7 @@ import * as materials from './materials'
 import Ruler from './ruler'
 import tween from './tween'
 import * as viewer from './viewer'
+import slides from './slides'
 import * as slideshow from './slideshow'
 import './style.scss'
 
@@ -60,15 +61,31 @@ viewer.renderFrame()
 const ruler = new Ruler(viewer)
 viewer.resize()
 
+Object.keys(slides).forEach(name => {
+  const slide = slides[name]
+  if (slide.initialize) {
+    slide.initialize()
+  }
+})
+
 slideshow.initialize()
-slideshow.events.on('slidechanged', ({ previousSlide, slide }) => {
+slideshow.events.on('slidechanged', ({ previousSlide, slide, state }) => {
   const prev = keyboards[previousSlide.dataset.keyboardLayout]
   const next = keyboards[slide.dataset.keyboardLayout]
 
-  tweenColours(
+  tweenLight(
     window.getComputedStyle(previousSlide).backgroundColor,
     window.getComputedStyle(slide).backgroundColor
   )
+
+  const prevSlideName = previousSlide.dataset.slide
+  const nextSlideName = slide.dataset.slide
+  if (prevSlideName && slides[prevSlideName]) {
+    slides[prevSlideName].deactivate && slides[prevSlideName].deactivate(state)
+  }
+  if (nextSlideName && slides[nextSlideName]) {
+    slides[nextSlideName].activate && slides[nextSlideName].activate(state)
+  }
 
   if (prev && next) {
     tweenKeyboards(prev, next)
@@ -83,6 +100,11 @@ slideshow.events.on('slidechanged', ({ previousSlide, slide }) => {
   activeKeymap = makeKeymap(wrapper)
 })
 
+slideshow.events.on('fragmentchanged', ({ slide, state, fragment }) => {
+  const slideActions = slides[slide.dataset.slide] || {}
+  slideActions.fragment && slideActions.fragment(state, fragment)
+})
+
 const tweenKeyboards = (begin, end) => {
   const { start, stop } = tween(viewer.renderFrame, wrapper, begin, end, 500)
   cancel && cancel()
@@ -92,7 +114,7 @@ const tweenKeyboards = (begin, end) => {
   start(() => { cancel = null })
 }
 
-const tweenColours = (begin, end) => {
+const tweenLight = (begin, end) => {
   const beginColour = new Color(begin)
   const endColour = new Color(end)
 
