@@ -23,12 +23,17 @@ export const next = (slides, state) => {
   const fragments = [].slice.call(slides[state.slide].querySelectorAll('.fragment'))
 
   if (state.fragment < fragments.length - 1) {
-    const fragment = fragments[++state.fragment]
+    state.previousFragment = state.fragment
+    state.fragment++
+    const previousFragment = fragments[state.previousFragment]
+    const fragment = fragments[state.fragment]
     fragment.classList.add('active')
 
     events.emit('fragmentchanged', {
       slide: slides[state.slide],
       slideIndex: state.slide,
+      previousFragmentIndex: state.fragment - 1,
+      previousFragment,
       fragment,
       state
     })
@@ -39,6 +44,7 @@ export const next = (slides, state) => {
     previousSlide.classList.remove('active')
     slide.classList.add('active')
     state.fragment = -1
+    state.previousFragment = -1
 
     events.emit('slidechanged', {
       previousSlideIndex: state.slide - 1,
@@ -53,13 +59,17 @@ export const next = (slides, state) => {
 
 export const prev = (slides, state) => {
   if (state.fragment > -1) {
+    state.previousFragment = state.fragment
+    state.fragment--
     const fragments = [].slice.call(slides[state.slide].querySelectorAll('.fragment'))
-    const previousFragment = fragments[state.fragment]
-    const fragment = fragments[--state.fragment]
+    const previousFragment = fragments[state.previousFragment]
+    const fragment = fragments[state.fragment]
 
     previousFragment.classList.remove('active')
     events.emit('fragmentchanged', {
       slide: slides[state.slide],
+      previousFragmentIndex: state.fragment + 1,
+      previousFragment,
       fragment,
       state
     })
@@ -71,6 +81,7 @@ export const prev = (slides, state) => {
     previousSlide.classList.remove('active')
     slide.classList.add('active')
     state.fragment = fragments.length - 1
+    state.previousFragment = state.fragment
 
     events.emit('slidechanged', {
       previousSlideIndex: state.slide + 1,

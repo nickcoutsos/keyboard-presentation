@@ -4,6 +4,7 @@ import * as animation from './animation'
 import { makeKeymap } from './layouts'
 import * as keyboards from './keyboards'
 import * as materials from './materials'
+import * as parts from './parts'
 import Ruler from './ruler'
 import tween from './tween'
 import * as viewer from './viewer'
@@ -61,11 +62,13 @@ viewer.renderFrame()
 const ruler = new Ruler(viewer)
 viewer.resize()
 
-Object.keys(slides).forEach(name => {
-  const slide = slides[name]
-  if (slide.initialize) {
-    slide.initialize()
-  }
+parts.loadAll().then(() => {
+  Object.keys(slides).forEach(name => {
+    const slide = slides[name]
+    if (slide.initialize) {
+      slide.initialize()
+    }
+  })
 })
 
 slideshow.initialize()
