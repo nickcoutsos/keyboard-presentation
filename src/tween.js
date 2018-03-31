@@ -1,5 +1,6 @@
 import { Vector3 } from 'three'
 import { mapValues } from 'lodash'
+import { easeInOutCubic } from 'easing-utils'
 import * as layouts from './layouts'
 import * as animation from './animation'
 
@@ -56,5 +57,5 @@ export default (renderFrame, container, source, target, duration) => {
     })
 
     renderFrame()
-  }, duration, animation.easeOutQuad)
+  }, duration, easeInOutCubic)
 }
