@@ -21,12 +21,15 @@ export const composer = new EffectComposer(renderer, renderTarget)
 
 renderer.localClippingEnabled = true
 
-const pausePass = Object.assign(new ShaderPass(pauseEffect), { enabled: false })
+const effects = {
+  pause: Object.assign(new ShaderPass(pauseEffect), { enabled: false })
+}
+
 const copyPass = Object.assign(new ShaderPass(CopyShader), { renderToScreen: true })
 const start = Date.now()
 
 export const renderFrame = throttle(() => {
-  pausePass.uniforms.time.value = (Date.now() - start) / 1000
+  effects.pause.uniforms.time.value = (Date.now() - start) / 1000
   composer.render()
 }, 16)
 
@@ -36,7 +39,7 @@ export const init = () => {
   window.addEventListener('resize', resize)
 
   composer.addPass(new RenderPass(scene, camera))
-  composer.addPass(pausePass)
+  composer.addPass(effects.pause)
   composer.addPass(copyPass)
 
   const ambientLight = new AmbientLight('powderblue', .8)
@@ -46,7 +49,7 @@ export const init = () => {
 
   camera.position.set(-5, -10, 10)
   camera.up.set(0, 0, 1)
-  camera.lookAt(new Vector3(0, 3, 0))
+  camera.lookAt(new Vector3(0, 4, 0))
 
   scene.add(
     camera,
@@ -57,8 +60,11 @@ export const init = () => {
   resize()
 }
 
-export const togglePauseEffect = () => {
-  pausePass.enabled = !pausePass.enabled
+export const toggleEffect = (name, enabled) => {
+  const effect = effects[name]
+  effect.enabled = enabled === undefined
+    ? !effect.enabled
+    : enabled
 }
 
 let resizeHandler = () => {}
@@ -69,7 +75,7 @@ export function resize () {
 
   renderer.setSize(width, height)
   renderTarget.setSize(width, height)
-  pausePass.uniforms.resolution.value.set(width, height)
+  effects.pause.uniforms.resolution.value.set(width, height)
   camera.aspect = width / height
   camera.updateProjectionMatrix()
   resizeHandler(width, height)

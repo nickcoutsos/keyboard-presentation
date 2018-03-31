@@ -11,29 +11,37 @@ STLLoader.prototype = {
   constructor: STLLoader,
 
   load: function ( url, onLoad, onProgress, onError ) {
+    return new Promise((resolve, reject) => {
+      var scope = this;
 
-    var scope = this;
+      var loader = new three.FileLoader( scope.manager );
+      loader.setResponseType( 'arraybuffer' );
+      loader.load( url, function ( text ) {
 
-    var loader = new three.FileLoader( scope.manager );
-    loader.setResponseType( 'arraybuffer' );
-    loader.load( url, function ( text ) {
+        try {
 
-      try {
+          const parsed = scope.parse(text)
 
-        onLoad( scope.parse( text ) );
+          if (onLoad) {
+            onLoad(parsed);
+          }
 
-      } catch ( exception ) {
+          resolve(parsed)
 
-        if ( onError ) {
+        } catch ( exception ) {
 
-          onError( exception );
+          if ( onError ) {
+
+            onError( exception );
+
+          }
+
+          reject(exception)
 
         }
 
-      }
-
-    }, onProgress, onError );
-
+      }, onProgress, reject );
+    })
   },
 
   parse: function ( data ) {

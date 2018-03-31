@@ -20,7 +20,7 @@ export const deactivate = () => {
 }
 
 let animation
-let rotation = .02
+let rotation = .035
 const animate = () => {
   if (rotation) {
     parts.scene.rotation.z -= rotation
@@ -33,7 +33,7 @@ const animate = () => {
 export const fragment = (state) => {
   switch (state.fragment) {
     case -1:
-      rotation = 0.02
+      rotation = 0.035
       parts.scene.visible = true
       viewer.toggleEffect('pause', false)
       break
@@ -42,7 +42,7 @@ export const fragment = (state) => {
       viewer.toggleEffect('pause', true)
       break
     case 1: 
-      rotation = -.7
+      rotation = -.5
       viewer.toggleEffect('pause', true)
       break
     case 2:
