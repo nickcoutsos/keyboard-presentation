@@ -73,8 +73,8 @@ parts.loadAll().then(() => {
 
 slideshow.initialize()
 slideshow.events.on('slidechanged', ({ previousSlide, slide, state }) => {
-  const prev = keyboards[previousSlide.dataset.keyboardLayout]
-  const next = keyboards[slide.dataset.keyboardLayout]
+  const prev = keyboards[previousSlide.dataset.keyboardLayout] || new Object3D()
+  const next = keyboards[slide.dataset.keyboardLayout] || new Object3D()
 
   tweenLight(
     window.getComputedStyle(previousSlide).backgroundColor,
@@ -90,16 +90,7 @@ slideshow.events.on('slidechanged', ({ previousSlide, slide, state }) => {
     slides[nextSlideName].activate && slides[nextSlideName].activate(state)
   }
 
-  if (prev && next) {
-    tweenKeyboards(prev, next)
-  } else {
-    wrapper.remove(...wrapper.children)
-    if (next) {
-      wrapper.add(...next.children.map(child => child.clone()))
-      viewer.renderFrame()
-    }
-  }
-
+  tweenKeyboards(prev, next)
   activeKeymap = makeKeymap(wrapper)
 })
 
@@ -109,7 +100,7 @@ slideshow.events.on('fragmentchanged', ({ slide, state, fragment }) => {
 })
 
 const tweenKeyboards = (begin, end) => {
-  const { start, stop } = tween(viewer.renderFrame, wrapper, begin, end, 500)
+  const { start, stop } = tween(viewer.renderFrame, wrapper, begin, end, 2000)
   cancel && cancel()
   cancel = stop
 
