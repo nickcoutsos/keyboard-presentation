@@ -6,6 +6,14 @@ export const animate = (frame, duration = 100, timingFunction = linear) => {
   let callback_
 
   function start (callback = () => {}) {
+    direction = 1
+    start_ = Date.now()
+    callback_ = callback
+    animate()
+  }
+
+  function reverse (callback = () => {}) {
+    direction = -1
     start_ = Date.now()
     callback_ = callback
     animate()
@@ -35,6 +43,7 @@ export const animate = (frame, duration = 100, timingFunction = linear) => {
 
   return {
     start,
-    stop
+    stop,
+    reverse
   }
 }
