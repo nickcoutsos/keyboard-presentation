@@ -5,7 +5,7 @@ import * as layouts from './layouts'
 import * as animation from './animation'
 
 const getNodeTransforms = node => ({
-  scale: node.getWorldScale(),
+  scale: node.scale,
   position: node.getWorldPosition(),
   quaternion: node.getWorldQuaternion()
 })
