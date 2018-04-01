@@ -38,8 +38,11 @@ export const next = (slides, state) => {
       state
     })
   } else if (state.slide < slides.length - 1) {
-    const previousSlide = slides[state.slide]
-    const slide = slides[++state.slide]
+    state.previousSlide = state.slide
+    state.slide++
+
+    const previousSlide = slides[state.previousSlide]
+    const slide = slides[state.slide]
 
     previousSlide.classList.remove('active')
     slide.classList.add('active')
@@ -47,7 +50,7 @@ export const next = (slides, state) => {
     state.previousFragment = -1
 
     events.emit('slidechanged', {
-      previousSlideIndex: state.slide - 1,
+      previousSlideIndex: state.previousSlide,
       previousSlide,
       slide,
       state
@@ -74,8 +77,11 @@ export const prev = (slides, state) => {
       state
     })
   } else if (state.slide > 0) {
-    const previousSlide = slides[state.slide]
-    const slide = slides[--state.slide]
+    state.previousSlide = state.slide
+    state.slide--
+
+    const previousSlide = slides[state.previousSlide]
+    const slide = slides[state.slide]
     const fragments = [].slice.call(slide.querySelectorAll('.fragment'))
 
     previousSlide.classList.remove('active')
