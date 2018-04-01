@@ -5,10 +5,12 @@ import * as layouts from './layouts'
 import * as animation from './animation'
 
 const getNodeTransforms = node => ({
-  scale: node.scale.clone(),
+  scale: node.getWorldScale(),
   position: node.getWorldPosition(),
   quaternion: node.getWorldQuaternion()
 })
+
+const ZEROISH = 1e-10
 
 export default (renderFrame, container, source, target, duration) => {
   const sourceKeys = layouts.makeKeymap(source)
@@ -17,13 +19,16 @@ export default (renderFrame, container, source, target, duration) => {
   const end = mapValues(targetKeys, getNodeTransforms)
 
   container.remove(...container.children)
-  container.add(...Object.keys(sourceKeys).map(key => sourceKeys[key].clone()))
+  const availableKeys = Object.keys(sourceKeys).map(key => sourceKeys[key].clone())
+  if (availableKeys.length > 0) {
+    container.add(...availableKeys)
+  }
 
   Object.keys(begin).forEach(key => {
     if (end[key]) return
 
     end[key] = {
-      scale: new Vector3(0, 0, 0),
+      scale: new Vector3(ZEROISH, ZEROISH, ZEROISH),
       position: begin[key].position.clone().sub(new Vector3(0, 0, 5)),
       quaternion: begin[key].quaternion.clone()
     }
@@ -35,7 +40,7 @@ export default (renderFrame, container, source, target, duration) => {
     container.add(targetKeys[key].clone())
 
     begin[key] = {
-      scale: new Vector3(0, 0, 0),
+      scale: new Vector3(ZEROISH, ZEROISH, ZEROISH),
       position: end[key].position.clone().sub(new Vector3(0, 0, 5)),
       quaternion: end[key].quaternion.clone()
     }
