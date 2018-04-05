@@ -9,6 +9,13 @@ html, body {
 	color: white;
 }
 
+.slide {
+	pointer-events: none;
+	&.active {
+		pointer-events: auto;
+	}
+}
+
 .slide h2 {
 	font-size: 72px;
 	margin: 10px 0;
@@ -28,6 +35,7 @@ html, body {
 	padding: 0;
 	height: 100%;
 	width: 100%;
+	pointer-events: none;
 
 	transition: background-color 1.5s ease;
 }
@@ -35,11 +43,36 @@ html, body {
 #ready { background-color: darkseagreen; }
 #intro { background-color: bisque; }
 #supports { background-color: darksalmon; }
-#classic { background-color: lightblue; }
+#classic { background-color: darkgrey; }
+#classic h2.fragment { transition: 2s ease-in; }
 #apple { background-color: darksalmon; }
 #split { background-color: mediumaquamarine; }
 #ergodox { background-color: thistle; }
-#dactyl { background-color: tan; }
+#dactyl { background-color: powderblue; }
+[data-slide="outro"] {
+	background-color: #1E2454;
+	h1 {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+
+		transform: translate(-50%, -50%);
+		padding: 0;
+		margin: 0;
+
+		font-size: 200px;
+		font-style: italic;
+		font-family: palatino;
+		opacity: 0;
+	}
+
+	&.active h1 {
+		opacity: 1;
+		transition-property: opacity !important;
+		transition-delay: 35s !important;
+		transition: 5s ease-in;
+	}
+}
 
 #app canvas {
 	display: block;
