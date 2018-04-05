@@ -5,6 +5,7 @@ const recordScratch = new Audio('dist/assets/record-scratch.wav')
 const rewind = new Audio('dist/assets/rewind.wav')
 
 rewind.volume = .4
+rewind.playbackRate = 5
 rewind.loop = true
 
 export const initialize = () => {

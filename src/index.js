@@ -100,7 +100,7 @@ slideshow.events.on('fragmentchanged', ({ slide, state, fragment }) => {
 })
 
 const tweenKeyboards = (begin, end) => {
-  const { start, stop } = tween(viewer.renderFrame, wrapper, begin, end, 2000)
+  const { start, stop } = tween(viewer.renderFrame, wrapper, begin, end, 1500)
   cancel && cancel()
   cancel = stop
 

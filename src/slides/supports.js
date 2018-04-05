@@ -30,6 +30,7 @@ export const initialize = () => {
 }
 
 export const activate = () => {
+  sceneParts.rotation.z = 0
   sceneParts.visible = true
   animating = animate()
 }
