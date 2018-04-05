@@ -12,7 +12,7 @@ const getNodeTransforms = node => ({
 
 const ZEROISH = 1e-10
 
-export default (renderFrame, container, source, target, duration) => {
+export const makeTween = (container, source, target) => {
   const sourceKeys = layouts.makeKeymap(source)
   const targetKeys = layouts.makeKeymap(target)
   const begin = mapValues(sourceKeys, getNodeTransforms)
@@ -46,7 +46,7 @@ export default (renderFrame, container, source, target, duration) => {
     }
   })
 
-  return animation.animate(t => {
+  return t => {
     container.traverse(node => {
       const { id } = node.userData
       const a = begin[id]
@@ -60,7 +60,14 @@ export default (renderFrame, container, source, target, duration) => {
       node.position.copy(a.position).lerp(b.position, t)
       node.quaternion.copy(a.quaternion).slerp(b.quaternion, t)
     })
+  }
+}
 
+export default (renderFrame, container, source, target, duration) => {
+  const tween = makeTween(container, source, target)
+
+  return animation.animate(t => {
+    tween(t)
     renderFrame()
   }, duration, easeInOutCubic)
 }
