@@ -43,14 +43,14 @@ html, body {
 #ready { background-color: darkseagreen; }
 #intro { background-color: bisque; }
 #supports { background-color: darksalmon; }
-#classic { background-color: darkgrey; }
-#classic h2.fragment { transition: 2s ease-in; }
+#classic { background-color: burlywood; }
 #apple { background-color: darksalmon; }
 #split { background-color: mediumaquamarine; }
-#ergodox { background-color: thistle; }
-#dactyl { background-color: powderblue; }
+#ergodox { background-color: mediumpurple; }
+#dactyl { background-color: cornflowerblue; }
+
 [data-slide="outro"] {
-	background-color: #1E2454;
+	background-color: steelblue;
 	h1 {
 		position: absolute;
 		left: 50%;
