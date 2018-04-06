@@ -81,6 +81,11 @@ slideshow.events.on('slidechanged', ({ previousSlide, slide, state }) => {
     window.getComputedStyle(slide).backgroundColor
   )
 
+  tweenKey(
+    materials.secondary.color.clone(),
+    new Color(window.getComputedStyle(slide).backgroundColor).offsetHSL(0, .1, -.35)
+  )
+
   const prevSlideName = previousSlide.dataset.slide
   const nextSlideName = slide.dataset.slide
   if (prevSlideName && slides[prevSlideName]) {
@@ -117,5 +122,13 @@ const tweenLight = (begin, end) => {
     const ambientLight = viewer.scene.getObjectByName('ambient')
     ambientLight.color = color
     viewer.renderFrame()
+  }, 500).start()
+}
+
+const tweenKey = (begin, end) => {
+  animation.animate(t => {
+    materials.secondary.color
+      .copy(begin)
+      .lerp(end, t)
   }, 500).start()
 }
