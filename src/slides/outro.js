@@ -31,17 +31,16 @@ export const initialize = () => {
 }
 
 export const activate = () => {
-  console.log('wtf')
   window.addEventListener('keydown', volumeControl)
   wrapper.visible = true
   clip.start()
   music.currentTime = 0
-  music.play()
+  // music.play()
 }
 
 export const deactivate = () => {
   window.removeEventListener('keypress', volumeControl)
   wrapper.visible = false
   clip.stop()
-  music.pause()
+  // music.pause()
 }

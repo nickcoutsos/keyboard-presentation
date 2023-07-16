@@ -53,13 +53,13 @@ export const fragment = (state) => {
       rotation = 0
       viewer.toggleEffect('pause', true)
       if (state.previousFragment < state.fragment) {
-        recordScratch.play()
+        // recordScratch.play()
       }
       break
     case 1: 
       rotation = -.5
       viewer.toggleEffect('pause', true)
-      rewind.play()
+      // rewind.play()
       break
     case 2:
       parts.scene.visible = false
