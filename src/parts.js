@@ -9,10 +9,10 @@ const addMesh = name => geometry => scene.add(
 )
 
 const parts = {
-  caps: 'dist/assets/caps.stl',
-  plates: 'dist/assets/plates.stl',
-  mainSupports: 'dist/assets/main-supports.stl',
-  crossSupports: 'dist/assets/cross-supports.stl'
+  caps: 'caps.stl',
+  plates: 'plates.stl',
+  mainSupports: 'main-supports.stl',
+  crossSupports: 'cross-supports.stl'
 }
 
 const loadAll = () => Promise.all(
