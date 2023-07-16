@@ -3,7 +3,7 @@ import { upperFirst } from 'lodash'
 
 export const events = new EventEmitter()
 
-export const initialize = () => {
+export const initialize = (callback) => {
   const slides = [].slice.call(document.querySelectorAll('section.slide'))
   const state = {
     slide: 0,
@@ -17,6 +17,10 @@ export const initialize = () => {
     if (key === 'ArrowRight') next(slides, state)
     else if (key === 'ArrowLeft') prev(slides, state)
   })
+
+  if (callback) {
+    callback(slides)
+  }
 }
 
 export const next = (slides, state) => {

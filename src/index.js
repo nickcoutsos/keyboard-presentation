@@ -71,37 +71,52 @@ parts.loadAll().then(() => {
   })
 })
 
-slideshow.initialize()
-slideshow.events.on('slidechanged', ({ previousSlide, slide, state }) => {
-  const prev = keyboards[previousSlide.dataset.keyboardLayout] || new Object3D()
-  const next = keyboards[slide.dataset.keyboardLayout] || new Object3D()
+slideshow.initialize(slideElements => {
+  slideshow.events.on('slidechanged', ({ previousSlide, slide, state }) => {
+    const prev = keyboards[previousSlide.dataset.keyboardLayout] || new Object3D()
+    const next = keyboards[slide.dataset.keyboardLayout] || new Object3D()
+    const fragments = [].slice.call(slideElements[state.slide].querySelectorAll('.fragment'))
 
-  tweenLight(
-    window.getComputedStyle(previousSlide).backgroundColor,
-    window.getComputedStyle(slide).backgroundColor
-  )
+    function autoAdvance () {
+      if (state.fragment < fragments.length - 1) {
+        setTimeout(() => {
+          slideshow.next(slideElements, state)
+          autoAdvance()
+        }, 800)
+      }
+    }
 
-  tweenKey(
-    materials.secondary.color.clone(),
-    new Color(window.getComputedStyle(slide).backgroundColor).offsetHSL(0, .1, -.35)
-  )
+    if (state.fragment === -1 && state.previousSlide < state.slide) {
+      autoAdvance()
+    }
 
-  const prevSlideName = previousSlide.dataset.slide
-  const nextSlideName = slide.dataset.slide
-  if (prevSlideName && slides[prevSlideName]) {
-    slides[prevSlideName].deactivate && slides[prevSlideName].deactivate(state)
-  }
-  if (nextSlideName && slides[nextSlideName]) {
-    slides[nextSlideName].activate && slides[nextSlideName].activate(state)
-  }
+    tweenLight(
+      window.getComputedStyle(previousSlide).backgroundColor,
+      window.getComputedStyle(slide).backgroundColor
+    )
 
-  tweenKeyboards(prev, next)
-  activeKeymap = makeKeymap(wrapper)
-})
+    tweenKey(
+      materials.secondary.color.clone(),
+      new Color(window.getComputedStyle(slide).backgroundColor).offsetHSL(0, .1, -.35)
+    )
 
-slideshow.events.on('fragmentchanged', ({ slide, state, fragment }) => {
-  const slideActions = slides[slide.dataset.slide] || {}
-  slideActions.fragment && slideActions.fragment(state, fragment)
+    const prevSlideName = previousSlide.dataset.slide
+    const nextSlideName = slide.dataset.slide
+    if (prevSlideName && slides[prevSlideName]) {
+      slides[prevSlideName].deactivate && slides[prevSlideName].deactivate(state)
+    }
+    if (nextSlideName && slides[nextSlideName]) {
+      slides[nextSlideName].activate && slides[nextSlideName].activate(state)
+    }
+
+    tweenKeyboards(prev, next)
+    activeKeymap = makeKeymap(wrapper)
+  })
+
+  slideshow.events.on('fragmentchanged', ({ slide, state, fragment }) => {
+    const slideActions = slides[slide.dataset.slide] || {}
+    slideActions.fragment && slideActions.fragment(state, fragment)
+  })
 })
 
 const tweenKeyboards = (begin, end) => {
