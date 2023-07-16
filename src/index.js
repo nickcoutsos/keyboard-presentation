@@ -62,7 +62,9 @@ viewer.renderFrame()
 const ruler = new Ruler(viewer)
 viewer.resize()
 
+const initNotice = document.querySelector('#initialize p:last-child')
 parts.loadAll().then(() => {
+  initNotice.textContent = 'Use left/right arrow keys to navigate slides ➜'
   Object.keys(slides).forEach(name => {
     const slide = slides[name]
     if (slide.initialize) {
@@ -72,10 +74,16 @@ parts.loadAll().then(() => {
 })
 
 slideshow.initialize(slideElements => {
+  function slideProgress (index) {
+    const meter = document.querySelector('#meter')
+    meter.style.width = `${index / (slideElements.length - 1) * 100}%`
+  }
+
   slideshow.events.on('slidechanged', ({ previousSlide, slide, state }) => {
     const prev = keyboards[previousSlide.dataset.keyboardLayout] || new Object3D()
     const next = keyboards[slide.dataset.keyboardLayout] || new Object3D()
     const fragments = [].slice.call(slideElements[state.slide].querySelectorAll('.fragment'))
+    slideProgress(state.slide)
 
     function autoAdvance () {
       if (state.fragment < fragments.length - 1) {

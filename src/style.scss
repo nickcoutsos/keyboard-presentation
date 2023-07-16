@@ -40,7 +40,7 @@ html, body {
 	transition: background-color 1.5s ease;
 }
 
-#ready { background-color: darkseagreen; }
+#initialize { background-color: darkseagreen; }
 #intro { background-color: peru; }
 #supports { background-color: darksalmon; }
 #classic { background-color: burlywood; }
@@ -80,6 +80,22 @@ html, body {
 	margin: 0;
 }
 
+#slideshow-progress {
+	position: absolute;
+	bottom: 0;
+	display: block;
+	width: 100vw;
+	height: 3px;
+	background-color: rgba(0, 0, 0, 0.25);
+}
+#slideshow-progress #meter {
+	display: block;
+	height: 3px;
+	width: 0;
+	background-color: white;
+	transition: width 100ms  ease-in;
+}
+
 .slide {
 	position: absolute;
 	top: 0;
@@ -101,5 +117,37 @@ html, body {
 	transition: opacity .5s ease;
 	&:not(.active) {
 		opacity: 0;
+	}
+}
+
+.caption {
+	display: inline-block;
+	visibility: hidden;
+	position: absolute;
+	bottom: 10vh;
+
+	max-width: 80vw;
+	margin: 0 auto;
+	padding: 5px 20px;
+	border-radius: 3px;
+	box-sizing: border-box;
+
+	background-color: rgba(0, 0, 0, 0.75);
+	color: white;
+	font-size: 75%;
+	z-index: 10;
+}
+
+.active .caption {
+	visibility: visible;
+}
+
+
+@media (max-width: 900px) {
+	body {
+		font-size: 100%;
+	}
+	.slide h2 {
+		font-size: 36px;
 	}
 }

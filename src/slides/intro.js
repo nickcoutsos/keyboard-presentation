@@ -49,20 +49,29 @@ export const fragment = (state) => {
       parts.scene.visible = true
       viewer.toggleEffect('pause', false)
       break
-    case 0:
-      rotation = 0
-      viewer.toggleEffect('pause', true)
-      if (state.previousFragment < state.fragment) {
-        // recordScratch.play()
-      }
-      break
-    case 1: 
-      rotation = -.5
-      viewer.toggleEffect('pause', true)
-      // rewind.play()
-      break
-    case 2:
-      parts.scene.visible = false
-      break
+
+    // The rest of this slide is confusing on its own. After initially showing
+    // a rendering of the not-yet-built keyboard I did a "freeze frame" visual
+    // effect while playing a "record scratch" sound effect. During this pause
+    // I explained that they're looking at the end of my journey in learning
+    // about keyboard ergonomics and that to understand it I'll be taking them
+    // on that same journey to understand why the keyboard layouts we've been
+    // trained to use for most of our lives are terrible useless relics.
+
+    // case 0:
+    //   rotation = 0
+    //   viewer.toggleEffect('pause', true)
+    //   if (state.previousFragment < state.fragment) {
+    //     // recordScratch.play()
+    //   }
+    //   break
+    // case 1:
+    //   rotation = -.5
+    //   viewer.toggleEffect('pause', true)
+    //   // rewind.play()
+    //   break
+    // case 2:
+    //   parts.scene.visible = false
+    //   break
   }
 }
